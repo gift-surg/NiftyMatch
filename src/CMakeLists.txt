@@ -2,9 +2,6 @@ PROJECT(NiftyMatch)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMake)
-if(NOT MY_SOURCE_DIR)
-    MESSAGE(FATAL_ERROR "Set MY_SOURCE_DIR to path/to/your/gpu-mosaicing/src.")
-endif()
 
 # C++11
 INCLUDE(CheckCXXCompilerFlag)
@@ -29,7 +26,7 @@ if(CUDA_FOUND)
     # Compile an executable to check if there is at least one suitable graphical card
     TRY_RUN(RUN_RESULT_VAR COMPILE_RESULT_VAR
             ${CMAKE_BINARY_DIR}
-            ${MY_SOURCE_DIR}/gpu/check/checkCudaCard.cpp
+            ${CMAKE_SOURCE_DIR}/gpu/check/check_cuda_card.cpp
             CMAKE_FLAGS
             -DINCLUDE_DIRECTORIES:STRING=${CUDA_INCLUDE_DIRS}
             -DLINK_LIBRARIES:STRING=${CUDA_LIBRARIES}
@@ -62,12 +59,11 @@ endif(CUDA_FOUND)
 
 INCLUDE_DIRECTORIES(${CUDA_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${CUDA_TOOLKIT_ROOT_DIR}/samples/common/inc) # helper_*
-#INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/cpu/core)
-INCLUDE_DIRECTORIES(${MY_SOURCE_DIR}/utils)
-INCLUDE_DIRECTORIES(${MY_SOURCE_DIR}/gpu/kernels)
-INCLUDE_DIRECTORIES(${MY_SOURCE_DIR}/gpu/utils)
-INCLUDE_DIRECTORIES(${MY_SOURCE_DIR}/gpu/sift)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/utils)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/gpu/kernels)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/gpu/utils)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/gpu/sift)
 
-SUBDIRS(${MY_SOURCE_DIR}/gpu/kernels)
-SUBDIRS(${MY_SOURCE_DIR}/gpu/utils)
-SUBDIRS(${MY_SOURCE_DIR}/gpu/sift)
+SUBDIRS(${CMAKE_SOURCE_DIR}/gpu/kernels)
+SUBDIRS(${CMAKE_SOURCE_DIR}/gpu/utils)
+SUBDIRS(${CMAKE_SOURCE_DIR}/gpu/sift)

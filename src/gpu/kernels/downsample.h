@@ -1,0 +1,12 @@
+#ifndef __DOWNSAMPLE_H__
+#define __DOWNSAMPLE_H__
+
+#include <cuda.h>
+#include <cuda_runtime.h>
+
+template<typename DataType>
+void downsample_by_2(DataType* result, const int result_width, const int result_height,
+                     const DataType* source, const int source_width, const int source_height,
+                     cudaStream_t stream=0);
+
+#endif
