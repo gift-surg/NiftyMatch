@@ -68,3 +68,5 @@ SUBDIRS(${CMAKE_SOURCE_DIR}/gpu/sift)
 
 INSTALL(FILES
     utils/macros.h DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+INSTALL(FILES
+    cmake/NiftyMatchConfig.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/include/cmake)
