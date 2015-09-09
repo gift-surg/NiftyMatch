@@ -1,6 +1,10 @@
 # Summary
 NiftyMatch is a library featuring GPU implementations of feature detection and matching algorithms.
 
+# Pre-requisites
+1. CMake 3.2+
+1. CUDA 7
+
 # Build
 Currently Mac and Linux only.
 ```
