@@ -8,17 +8,25 @@
 #  NiftyMatch_kernels_LIB
 #  NiftyMatch_sift_LIB
 
+# to be kept in sync with CMakeLists.txt at top level
+# allows defined suffix to be appended to all searched paths
+SET(NiftyMatch_PATH_SUFFIX nm)
+
 # Include dir
 FIND_PATH(NiftyMatch_INCLUDE_DIR
-	NAMES macros.h)
+	NAMES macros.h
+	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 
 # And the modules of this library
 FIND_LIBRARY(NiftyMatch_gpuutils_LIB
-	NAMES gpuutils)
+	NAMES gpuutils
+	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 FIND_LIBRARY(NiftyMatch_kernels_LIB
-	NAMES kernels)
+	NAMES kernels
+	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 FIND_LIBRARY(NiftyMatch_sift_LIB
-	NAMES sift)
+	NAMES sift
+	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 
 # Put them all into a var
 SET(NiftyMatch_LIBS
