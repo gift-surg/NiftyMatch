@@ -15,17 +15,21 @@ SET(NiftyMatch_PATH_SUFFIX nm)
 # Include dir
 FIND_PATH(NiftyMatch_INCLUDE_DIR
 	NAMES macros.h
+	PATHS ${CMAKE_CURRENT_LIST_DIR}/../..
 	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 
 # And the modules of this library
 FIND_LIBRARY(NiftyMatch_gpuutils_LIB
 	NAMES gpuutils
+	PATHS ${CMAKE_CURRENT_LIST_DIR}/../../lib
 	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 FIND_LIBRARY(NiftyMatch_kernels_LIB
 	NAMES kernels
+	PATHS ${CMAKE_CURRENT_LIST_DIR}/../../lib
 	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 FIND_LIBRARY(NiftyMatch_sift_LIB
 	NAMES sift
+	PATHS ${CMAKE_CURRENT_LIST_DIR}/../../lib
 	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 
 # Put them all into a var
