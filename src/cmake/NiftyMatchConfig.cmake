@@ -15,7 +15,7 @@ SET(NiftyMatch_PATH_SUFFIX nm)
 # Include dir
 FIND_PATH(NiftyMatch_INCLUDE_DIR
 	NAMES macros.h
-	PATHS ${CMAKE_CURRENT_LIST_DIR}/../..
+	PATHS ${CMAKE_CURRENT_LIST_DIR}/../../include
 	PATH_SUFFIXES ${NiftyMatch_PATH_SUFFIX})
 
 # And the modules of this library
