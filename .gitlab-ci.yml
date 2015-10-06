@@ -2,7 +2,7 @@ jobs:
   script:
   # - if [ $(hostname) = "gift-adelie" ] ; then
     - "################ NiftyMatch ################"
-    - cd ..
+    # - cd ..
     - rm -rf NiftyMatch-build NiftyMatch-install
     - mkdir NiftyMatch-build NiftyMatch-install
     - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
@@ -40,5 +40,5 @@ jobs:
   tags:
     - gift-linux
     - cuda
-  except:
-  - tags
+  # except:
+  # - tags
