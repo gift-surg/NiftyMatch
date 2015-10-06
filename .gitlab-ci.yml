@@ -1,45 +1,44 @@
-build:
-  script:
-  # - if [ $(hostname) = "gift-adelie" ] ; then
-    # - "################ NiftyMatch ################"
-    # - cd ..
-    - echo "SUCCESS!!!"
-    # - rm -rf NiftyMatch-build NiftyMatch-install
-    # - mkdir NiftyMatch-build NiftyMatch-install
-    # - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
-    # - cd NiftyMatch-build
-    # - cmake -DCMAKE_INSTALL_PREFIX="$NiftyMatch_INSTALL_DIR" ../NiftyMatch/src
-    # - make -j
-    # - make install
-  # - ''
-  # - "################ cuSIFT ################"
+script:
+# - if [ $(hostname) = "gift-adelie" ] ; then
+  # - "################ NiftyMatch ################"
   # - cd ..
-  # - rm -rf cuSIFT
-  # - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git cuSIFT --branch dev
-  # - rm -rf cuSIFT-build
-  # - mkdir cuSIFT-build
-  # - cd cuSIFT-build
-  # - /home/xargon/Downloads/cmake-3.2.2-Linux-x86_64/bin/cmake -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm"
-  #   ../cuSIFT/src
+  - echo "SUCCESS!!!"
+  # - rm -rf NiftyMatch-build NiftyMatch-install
+  # - mkdir NiftyMatch-build NiftyMatch-install
+  # - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
+  # - cd NiftyMatch-build
+  # - cmake -DCMAKE_INSTALL_PREFIX="$NiftyMatch_INSTALL_DIR" ../NiftyMatch/src
   # - make -j
-  # - "./cusift -s ../cuSIFT/data/sourcecrop.jpg -t ../cuSIFT/data/targetcrop.jpg -o
-  #   result.jpg"
-  # - ''
-  # - "################ gpu-mosaicing ################"
-  # - cd ..
-  # - rm -rf gpu-mosaicing
-  # - git clone git@cmiclab.cs.ucl.ac.uk:pdaga/gpu-mosaicing.git gpu-mosaicing --branch
-  #   5-open-source-core-algorithm
-  # - rm -rf gpu-mosaicing-build
-  # - mkdir gpu-mosaicing-build
-  # - cd gpu-mosaicing-build
-  # - /home/xargon/Downloads/cmake-3.2.2-Linux-x86_64/bin/cmake -DQt5Widgets_DIR=/home/xargon/dev_tools/qt-5_4_gcc_4_8/5.4/gcc_64/lib/cmake/Qt5Widgets
-  #   -DQt5OpenGL_DIR=/home/xargon/dev_tools/qt-5_4_gcc_4_8/5.4/gcc_64/lib/cmake/Qt5OpenGL
-  #   -DUSE_LIBVLC=OFF -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" ../gpu-mosaicing/src
-  # - make -j
-  # - fi
-  tags:
-    - gift-linux
-    - cuda
-  # except:
-  # - tags
+  # - make install
+# - ''
+# - "################ cuSIFT ################"
+# - cd ..
+# - rm -rf cuSIFT
+# - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git cuSIFT --branch dev
+# - rm -rf cuSIFT-build
+# - mkdir cuSIFT-build
+# - cd cuSIFT-build
+# - /home/xargon/Downloads/cmake-3.2.2-Linux-x86_64/bin/cmake -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm"
+#   ../cuSIFT/src
+# - make -j
+# - "./cusift -s ../cuSIFT/data/sourcecrop.jpg -t ../cuSIFT/data/targetcrop.jpg -o
+#   result.jpg"
+# - ''
+# - "################ gpu-mosaicing ################"
+# - cd ..
+# - rm -rf gpu-mosaicing
+# - git clone git@cmiclab.cs.ucl.ac.uk:pdaga/gpu-mosaicing.git gpu-mosaicing --branch
+#   5-open-source-core-algorithm
+# - rm -rf gpu-mosaicing-build
+# - mkdir gpu-mosaicing-build
+# - cd gpu-mosaicing-build
+# - /home/xargon/Downloads/cmake-3.2.2-Linux-x86_64/bin/cmake -DQt5Widgets_DIR=/home/xargon/dev_tools/qt-5_4_gcc_4_8/5.4/gcc_64/lib/cmake/Qt5Widgets
+#   -DQt5OpenGL_DIR=/home/xargon/dev_tools/qt-5_4_gcc_4_8/5.4/gcc_64/lib/cmake/Qt5OpenGL
+#   -DUSE_LIBVLC=OFF -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" ../gpu-mosaicing/src
+# - make -j
+# - fi
+tags:
+  - gift-linux
+  - cuda
+# except:
+# - tags
