@@ -38,7 +38,8 @@ jobs:
   #   -DUSE_LIBVLC=OFF -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" ../gpu-mosaicing/src
   # - make -j
   # - fi
-  tags: "gift-linux"
+  tags:
+    - gift-linux
     # - cuda
   # except:
   # - tags
