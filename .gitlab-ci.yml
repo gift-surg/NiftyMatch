@@ -17,7 +17,7 @@ jobs:
     - rm -rf cuSIFT-build
     - mkdir cuSIFT-build
     - cd cuSIFT-build
-    - cmake -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" ../cuSIFT/src
+    - cmake -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" -DBUILD_TESTS=ON ../cuSIFT/src
     - make -j
     - ./cusift -s ../cuSIFT/data/placenta/source.jpg -t ../cuSIFT/data/placenta/target.jpg -o result.jpg
     - make test
