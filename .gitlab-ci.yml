@@ -18,10 +18,10 @@ jobs:
     - mkdir cuSIFT-build
     - cd cuSIFT-build
     - cmake -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" ../cuSIFT/src
-  # - make -j
-  # - "./cusift -s ../cuSIFT/data/sourcecrop.jpg -t ../cuSIFT/data/targetcrop.jpg -o
-  #   result.jpg"
-  # - ''
+    - make -j
+    - ./cusift -s ../cuSIFT/data/placenta/source.jpg -t ../cuSIFT/data/placenta/target.jpg -o result.jpg
+    - make test
+    - ''
   # - "################ gpu-mosaicing ################"
   # - cd ..
   # - rm -rf gpu-mosaicing
