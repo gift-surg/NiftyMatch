@@ -10,8 +10,8 @@ jobs:
     - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
     - cd NiftyMatch-build
     - cmake -DCMAKE_INSTALL_PREFIX="$NiftyMatch_INSTALL_DIR" ../NiftyMatch/src
-    # - make -j
-    # - make install
+    - make -j
+    - make install
   # - ''
   # - "################ cuSIFT ################"
   # - cd ..
