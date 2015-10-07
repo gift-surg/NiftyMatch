@@ -11,9 +11,9 @@ jobs:
     - make install
     - ''
     - "################ cuSIFT ################"
-  # - cd ..
-  # - rm -rf cuSIFT
-  # - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git cuSIFT --branch dev
+    - cd ..
+    - rm -rf cuSIFT
+    - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git cuSIFT --branch dev
   # - rm -rf cuSIFT-build
   # - mkdir cuSIFT-build
   # - cd cuSIFT-build
