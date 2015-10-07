@@ -3,6 +3,7 @@ jobs:
   # - if [ $(hostname) = "gift-adelie" ] ; then
     # - "################ NiftyMatch ################"
     # - cd ..
+    - export GIT_SSL_NO_VERIFY=true
     - echo "SUCCESS!!!"
     # - rm -rf NiftyMatch-build NiftyMatch-install
     # - mkdir NiftyMatch-build NiftyMatch-install
