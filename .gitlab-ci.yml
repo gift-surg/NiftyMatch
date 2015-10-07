@@ -37,6 +37,6 @@ jobs:
     # - cuda
     # - gift-adelie
     # - gift-mac
-    - gift-win
+    - tmp-tag-for-testing
   # except:
   # - tags
