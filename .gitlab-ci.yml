@@ -35,5 +35,6 @@ jobs:
     - gift-linux
     - cuda
     - gift-adelie
+    - gift-mac
   # except:
   # - tags
