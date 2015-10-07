@@ -34,5 +34,6 @@ jobs:
   tags:
     - gift-linux
     - cuda
+    - gift-adelie
   # except:
   # - tags
