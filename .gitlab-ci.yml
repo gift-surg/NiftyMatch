@@ -1,9 +1,9 @@
 jobs:
-  script:
+  script: "echo SUCCESS"
   # - if [ $(hostname) = "gift-adelie" ] ; then
     # - "################ NiftyMatch ################"
     # - cd ..
-    - echo "SUCCESS!!!"
+    # - echo "SUCCESS!!!"
     # - rm -rf NiftyMatch-build NiftyMatch-install
     # - mkdir NiftyMatch-build NiftyMatch-install
     # - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
