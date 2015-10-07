@@ -1,27 +1,28 @@
 jobs:
   script:
-    - "################ NiftyMatch ################"
-    - cd ..
-    - rm -rf NiftyMatch-build NiftyMatch-install
-    - mkdir NiftyMatch-build NiftyMatch-install
-    - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
-    - cd NiftyMatch-build
-    - cmake -DCMAKE_INSTALL_PREFIX="$NiftyMatch_INSTALL_DIR" ../NiftyMatch/src
-    - make -j
-    - make install
-    - ''
-    - "################ cuSIFT ################"
-    - cd ..
-    - rm -rf cuSIFT
-    - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git cuSIFT --branch dev
-    - rm -rf cuSIFT-build
-    - mkdir cuSIFT-build
-    - cd cuSIFT-build
-    - cmake -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" -DBUILD_TESTS=ON ../cuSIFT/src
-    - make -j
-    - ./cusift -s ../cuSIFT/data/placenta/source.jpg -t ../cuSIFT/data/placenta/target.jpg -o result.jpg
-    - make test
-    - ''
+    - dir
+    # - "################ NiftyMatch ################"
+    # - cd ..
+    # - rm -rf NiftyMatch-build NiftyMatch-install
+    # - mkdir NiftyMatch-build NiftyMatch-install
+    # - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
+    # - cd NiftyMatch-build
+    # - cmake -DCMAKE_INSTALL_PREFIX="$NiftyMatch_INSTALL_DIR" ../NiftyMatch/src
+    # - make -j
+    # - make install
+    # - ''
+    # - "################ cuSIFT ################"
+    # - cd ..
+    # - rm -rf cuSIFT
+    # - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git cuSIFT --branch dev
+    # - rm -rf cuSIFT-build
+    # - mkdir cuSIFT-build
+    # - cd cuSIFT-build
+    # - cmake -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" -DBUILD_TESTS=ON ../cuSIFT/src
+    # - make -j
+    # - ./cusift -s ../cuSIFT/data/placenta/source.jpg -t ../cuSIFT/data/placenta/target.jpg -o result.jpg
+    # - make test
+    # - ''
     # - "################ gpu-mosaicing ################"
     # - cd ..
     # - rm -rf gpu-mosaicing
@@ -33,8 +34,9 @@ jobs:
     # - make -j
   tags:
     # - gift-linux
-    - cuda
+    # - cuda
     # - gift-adelie
-    - gift-mac
+    # - gift-mac
+    - gift-win
   # except:
   # - tags
