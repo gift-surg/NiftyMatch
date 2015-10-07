@@ -32,9 +32,9 @@ jobs:
     - cmake -DQt5Widgets_DIR=/opt/QtSDK/5.5/gcc_64/lib/cmake/Qt5Widgets -DQt5OpenGL_DIR=/opt/QtSDK/5.5/gcc_64/lib/cmake/Qt5OpenGL -DUSE_LIBVLC=OFF -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" ../gpu-mosaicing/src
     - make -j
   tags:
-    - gift-linux
+    # - gift-linux
     - cuda
-    - gift-adelie
+    # - gift-adelie
     - gift-mac
   # except:
   # - tags
