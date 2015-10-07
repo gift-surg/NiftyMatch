@@ -39,7 +39,7 @@ jobs:
   # - make -j
   # - fi
   tags:
-    - gift-linux-new-one
+    - gift-linux
     # - cuda
   # except:
   # - tags
