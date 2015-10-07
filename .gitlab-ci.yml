@@ -7,9 +7,9 @@ jobs:
     # - echo "SUCCESS!!!"
     - rm -rf NiftyMatch-build NiftyMatch-install
     - mkdir NiftyMatch-build NiftyMatch-install
-    # - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
-    # - cd NiftyMatch-build
-    # - cmake -DCMAKE_INSTALL_PREFIX="$NiftyMatch_INSTALL_DIR" ../NiftyMatch/src
+    - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
+    - cd NiftyMatch-build
+    - cmake -DCMAKE_INSTALL_PREFIX="$NiftyMatch_INSTALL_DIR" ../NiftyMatch/src
     # - make -j
     # - make install
   # - ''
