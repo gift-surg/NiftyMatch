@@ -1,4 +1,4 @@
-jobs:
+build-mac:
   script:
     - pwd
     - echo "SuCCeSS"
@@ -37,10 +37,10 @@ jobs:
     # - make -j
   tags:
     # - gift-linux
-    # - cuda
+    - cuda
     # - gift-adelie
-    # - gift-mac
+    - gift-mac
     # - tmp-tag-for-testing
-    - tmp-tag-for-testing-cmiclab-lin
+    # - tmp-tag-for-testing-cmiclab-lin
   # except:
   # - tags
