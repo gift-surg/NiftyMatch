@@ -1,8 +1,18 @@
-build_mac:
+before_script:
+  - pwd
+  - echo "before_script"
+
+build-linux:
   script:
     - pwd
-    - echo "SuCCeSS"
-    - echo "after new key enabled"
+    - echo "build-linux"
+  tags:
+    - gift-mac
+
+build-mac:
+  script:
+    - pwd
+    - echo "build-mac"
     # - dir
     # - "################ NiftyMatch ################"
     # - cd ..
