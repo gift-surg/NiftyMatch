@@ -1,0 +1,29 @@
+before_script:
+  - export SCRATCH_DIR="$(pwd)/../scratch-space"
+  - export NiftyMatch_SOURCE_DIR="$(pwd)/src"
+  - export NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
+  - export INSTALL_DIR="$SCRATCH_DIR/install"
+  - export NiftyMatch_DIR="$INSTALL_DIR/include/nm"
+  - export cuSIFT_REPO_DIR="$SCRATCH_DIR/source/cuSIFT"
+  - export cuSIFT_SOURCE_DIR="$cuSIFT_REPO_DIR/src"
+  - export cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
+
+# Linux ##################
+gift-linux:
+  script:
+    - ./build-linux.sh
+    - ./deploy-linux.sh
+    - ./test-linux.sh
+  tags:
+    - gift-linux
+    - cuda
+
+# Mac ##################
+gift-mac:
+  script:
+    - ./build-linux.sh
+    - ./deploy-linux.sh
+    - ./test-linux.sh
+  tags:
+    - gift-mac
+    - cuda
