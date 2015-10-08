@@ -37,7 +37,7 @@ build_mac:
     # - make -j
   tags:
     # - gift-linux
-    - cuda
+    # - cuda
     # - gift-adelie
     - gift-mac
     # - tmp-tag-for-testing
