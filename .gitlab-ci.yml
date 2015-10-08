@@ -46,6 +46,7 @@ test-linux:
   script:
     - cd "$cuSIFT_BUILD_DIR"
     - make test
+    - cat ./Testing/Temporary/LastTest.log | grep -B 15 -A 5 -n -i "failed"
   tags:
     - gift-linux
     - cuda
