@@ -1,14 +1,14 @@
 variables:
   SCRATCH_DIR: "../scratch-space"
   # BUILD_DIR: "../build/NiftyMatch"
-  # INSTALL_DIR: "../install"
+  INSTALL_DIR: "install" # to be appended to SCRATCH_DIR
   # NiftyMatch_DIR: "include/nm" # to be appended to INSTALL_DIR
   # cuSIFT_BUILD_DIR: "extern/cuSIFT"
 
 before_script:
   - SCRATCH_DIR=$(readlink -f "$SCRATCH_DIR")
   - NiftyMatch_SOURCE_DIR="$(pwd)/src"
-  # - INSTALL_DIR="$(pwd)/$INSTALL_DIR"
+  - INSTALL_DIR="$SCRATCH_DIR/$INSTALL_DIR"
   # - echo $INSTALL_DIR
   - echo "$SCRATCH_DIR before_script"
 
@@ -24,9 +24,9 @@ build-linux:
     - BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
     - mkdir -p $BUILD_DIR
     - cd $BUILD_DIR
-    - cmake "$NiftyMatch_SOURCE_DIR"
-    # - make -j
-    # - make install
+    - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$NiftyMatch_SOURCE_DIR"
+    - make -j
+    - make install
   tags:
     - gift-linux
 
