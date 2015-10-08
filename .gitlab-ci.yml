@@ -1,6 +1,7 @@
 variables:
-  NiftyMatch_INSTALL_DIR: "install"
-  NiftyMatch_DIR: $NiftyMatch_INSTALL_DIR/include/nm
+  BUILD_DIR: "build/NiftyMatch"
+  INSTALL_DIR: "install"
+  NiftyMatch_DIR: "install/include/nm"
 
 before_script:
   - pwd
@@ -9,14 +10,24 @@ before_script:
 
 stages:
   - build
+  - deploy # faking deploy for now
   - test
 
 build-linux:
   stage: build
   script:
+    - mkdir -p $BUILD_DIR
+    - cd $BUILD_DIR
     - pwd
-    - echo $NiftyMatch_DIR
     - echo "build-linux"
+  tags:
+    - gift-linux
+
+deploy-linux:
+  stage: deploy
+  script:
+    - pwd
+    - echo "deploy-linux"
   tags:
     - gift-linux
 
@@ -36,7 +47,7 @@ test-mac:
     - echo $NiftyMatch_DIR
     - echo "test-mac"
   tags:
-    - gift-mac
+    - gift-mac-do-nothing
 
 build-mac:
   stage: build
@@ -80,7 +91,7 @@ build-mac:
     # - gift-linux
     # - cuda
     # - gift-adelie
-    - gift-mac
+    - gift-mac-do-nothing
     # - tmp-tag-for-testing
     # - tmp-tag-for-testing-cmiclab-lin
   # except:
