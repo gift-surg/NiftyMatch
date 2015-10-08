@@ -18,7 +18,7 @@ build-linux:
     - echo $NiftyMatch_DIR
     - echo "build-linux"
   tags:
-    - gift-mac
+    - gift-linux
 
 test-linux:
   stage: test
@@ -27,7 +27,7 @@ test-linux:
     - echo $NiftyMatch_DIR
     - echo "test-linux"
   tags:
-    - gift-mac
+    - gift-linux
 
 test-mac:
   stage: test
