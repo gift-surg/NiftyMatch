@@ -1,12 +1,12 @@
 before_script:
-  - SCRATCH_DIR=$(readlink -f "../scratch-space") # get absolute path
-  - NiftyMatch_SOURCE_DIR="$(pwd)/src"
-  - NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
-  - INSTALL_DIR="$SCRATCH_DIR/install"
-  - NiftyMatch_DIR="$INSTALL_DIR/include/nm"
-  - cuSIFT_REPO_DIR="$SCRATCH_DIR/source/cuSIFT"
-  - cuSIFT_SOURCE_DIR="$cuSIFT_REPO_DIR/src"
-  - cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
+  - export SCRATCH_DIR=$(readlink -f "../scratch-space") # get absolute path
+  - export NiftyMatch_SOURCE_DIR="$(pwd)/src"
+  - export NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
+  - export INSTALL_DIR="$SCRATCH_DIR/install"
+  - export NiftyMatch_DIR="$INSTALL_DIR/include/nm"
+  - export cuSIFT_REPO_DIR="$SCRATCH_DIR/source/cuSIFT"
+  - export cuSIFT_SOURCE_DIR="$cuSIFT_REPO_DIR/src"
+  - export cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
 
 stages:
   - build
