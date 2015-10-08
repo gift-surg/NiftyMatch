@@ -4,13 +4,14 @@ variables:
   NiftyMatch_DIR: "install/include/nm"
 
 before_script:
+  - INSTALL_DIR = "$(pwd)/$INSTALL_DIR"
   - pwd
-  - echo $NiftyMatch_DIR
+  - echo $INSTALL_DIR
   - echo "before_script"
 
 stages:
   - build
-  - deploy # faking deploy for now
+  - deploy # faking deploy for now, i.e. only for testing
   - test
 
 build-linux:
