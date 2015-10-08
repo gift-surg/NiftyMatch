@@ -1,4 +1,4 @@
-build-mac:
+build_mac:
   script:
     - pwd
     - echo "SuCCeSS"
