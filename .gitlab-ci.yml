@@ -1,16 +1,9 @@
-variables:
-  SCRATCH_DIR: "../scratch-space"
-  # BUILD_DIR: "../build/NiftyMatch"
-  INSTALL_DIR: "install" # to be appended to SCRATCH_DIR
-  NiftyMatch_DIR: "include/nm" # to be appended to INSTALL_DIR
-  # cuSIFT_BUILD_DIR: "extern/cuSIFT"
-
 before_script:
-  - SCRATCH_DIR=$(readlink -f "$SCRATCH_DIR")
+  - SCRATCH_DIR=$(readlink -f "../scratch-space") # get absolute path
   - NiftyMatch_SOURCE_DIR="$(pwd)/src"
-  - INSTALL_DIR="$SCRATCH_DIR/$INSTALL_DIR"
-  - NiftyMatch_DIR="$INSTALL_DIR/$NiftyMatch_DIR"
   - NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
+  - INSTALL_DIR="$SCRATCH_DIR/install"
+  - NiftyMatch_DIR="$INSTALL_DIR/include/nm"
   - cuSIFT_REPO_DIR="$SCRATCH_DIR/source/cuSIFT"
   - cuSIFT_SOURCE_DIR="$cuSIFT_REPO_DIR/src"
   - cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
@@ -30,6 +23,7 @@ build-linux:
     - make -j
   tags:
     - gift-linux
+    - cuda
 
 deploy-linux:
   stage: deploy
@@ -43,73 +37,15 @@ deploy-linux:
     - cd "$cuSIFT_BUILD_DIR"
     - cmake -D NiftyMatch_DIR="$NiftyMatch_DIR" -D BUILD_TESTS=ON "$cuSIFT_SOURCE_DIR"
     - make -j
-    # - pwd
-    # - echo "deploy-linux"
   tags:
     - gift-linux
+    - cuda
 
 test-linux:
   stage: test
   script:
     - cd "$cuSIFT_BUILD_DIR"
     - make test
-    - echo "$SCRATCH_DIR test-linux"
   tags:
     - gift-linux
-
-# test-mac:
-#   stage: test
-#   script:
-#     - pwd
-#     - echo $NiftyMatch_DIR
-#     - echo "test-mac"
-#   tags:
-#     - gift-mac-do-nothing
-
-# build-mac:
-#   stage: build
-#   script:
-#     - pwd
-#     - echo $NiftyMatch_DIR
-#     - echo "build-mac"
-#     # - dir
-#     # - "################ NiftyMatch ################"
-#     # - cd ..
-#     # - rm -rf NiftyMatch-build NiftyMatch-install
-#     # - mkdir NiftyMatch-build NiftyMatch-install
-#     # - NiftyMatch_INSTALL_DIR=$(pwd)/NiftyMatch-install
-#     # - cd NiftyMatch-build
-#     # - cmake -DCMAKE_INSTALL_PREFIX="$NiftyMatch_INSTALL_DIR" ../NiftyMatch/src
-#     # - make -j
-#     # - make install
-#     # - ''
-#     # - "################ cuSIFT ################"
-#     # - cd ..
-#     # - rm -rf cuSIFT
-#     # - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git cuSIFT --branch dev
-#     # - rm -rf cuSIFT-build
-#     # - mkdir cuSIFT-build
-#     # - cd cuSIFT-build
-#     # - cmake -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" -DBUILD_TESTS=ON ../cuSIFT/src
-#     # - make -j
-#     # - ./cusift -s ../cuSIFT/data/placenta/source.jpg -t ../cuSIFT/data/placenta/target.jpg -o result.jpg
-#     # - make test
-#     # - ''
-#     # - "################ gpu-mosaicing ################"
-#     # - cd ..
-#     # - rm -rf gpu-mosaicing
-#     # - git clone git@cmiclab.cs.ucl.ac.uk:pdaga/gpu-mosaicing.git gpu-mosaicing --branch dev
-#     # - rm -rf gpu-mosaicing-build
-#     # - mkdir gpu-mosaicing-build
-#     # - cd gpu-mosaicing-build
-#     # - cmake -DQt5Widgets_DIR=/opt/QtSDK/5.5/gcc_64/lib/cmake/Qt5Widgets -DQt5OpenGL_DIR=/opt/QtSDK/5.5/gcc_64/lib/cmake/Qt5OpenGL -DUSE_LIBVLC=OFF -DNiftyMatch_DIR="$NiftyMatch_INSTALL_DIR/include/nm" ../gpu-mosaicing/src
-#     # - make -j
-#   tags:
-#     # - gift-linux
-#     # - cuda
-#     # - gift-adelie
-#     - gift-mac-do-nothing
-#     # - tmp-tag-for-testing
-#     # - tmp-tag-for-testing-cmiclab-lin
-#   # except:
-#   # - tags
+    - cuda
