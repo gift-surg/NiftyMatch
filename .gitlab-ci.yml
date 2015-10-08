@@ -2,14 +2,17 @@ variables:
   SCRATCH_DIR: "../scratch-space"
   # BUILD_DIR: "../build/NiftyMatch"
   INSTALL_DIR: "install" # to be appended to SCRATCH_DIR
-  # NiftyMatch_DIR: "include/nm" # to be appended to INSTALL_DIR
+  NiftyMatch_DIR: "include/nm" # to be appended to INSTALL_DIR
   # cuSIFT_BUILD_DIR: "extern/cuSIFT"
 
 before_script:
   - SCRATCH_DIR=$(readlink -f "$SCRATCH_DIR")
   - NiftyMatch_SOURCE_DIR="$(pwd)/src"
   - INSTALL_DIR="$SCRATCH_DIR/$INSTALL_DIR"
+  - NiftyMatch_DIR="$INSTALL_DIR/$NiftyMatch_DIR"
   - NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
+  - cuSIFT_SOURCE_DIR="$SCRATCH_DIR/source/cuSIFT"
+  - cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
 
 stages:
   - build
@@ -19,9 +22,9 @@ stages:
 build-linux:
   stage: build
   script:
-    - rm -rf $NiftyMatch_BUILD_DIR
-    - mkdir -p $NiftyMatch_BUILD_DIR
-    - cd $NiftyMatch_BUILD_DIR
+    - rm -rf "$NiftyMatch_BUILD_DIR"
+    - mkdir -p "$NiftyMatch_BUILD_DIR"
+    - cd "$NiftyMatch_BUILD_DIR"
     - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$NiftyMatch_SOURCE_DIR"
     - make -j
   tags:
@@ -30,8 +33,14 @@ build-linux:
 deploy-linux:
   stage: deploy
   script:
-    - cd $NiftyMatch_BUILD_DIR
+    - cd "$NiftyMatch_BUILD_DIR"
     - make install
+    - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git "$cuSIFT_SOURCE_DIR" --branch dev
+    - rm -rf "$cuSIFT_BUILD_DIR"
+    - mkdir -p "$cuSIFT_BUILD_DIR"
+    - cd "$cuSIFT_BUILD_DIR"
+    - cmake -D NiftyMatch_DIR="$NiftyMatch_DIR" "$cuSIFT_SOURCE_DIR"
+    - make -j
     # - pwd
     # - echo "deploy-linux"
   tags:
@@ -40,8 +49,8 @@ deploy-linux:
 test-linux:
   stage: test
   script:
-    # - pwd
-    # - echo $NiftyMatch_DIR
+    - cd "$cuSIFT_BUILD_DIR"
+    - make test
     - echo "$SCRATCH_DIR test-linux"
   tags:
     - gift-linux
