@@ -2,14 +2,36 @@ before_script:
   - pwd
   - echo "before_script"
 
+stages:
+  - build
+  - test
+
 build-linux:
+  stage: build
   script:
     - pwd
     - echo "build-linux"
   tags:
     - gift-mac
 
+test-linux:
+  stage: test
+  script:
+    - pwd
+    - echo "test-linux"
+  tags:
+    - gift-mac
+
+test-mac:
+  stage: test
+  script:
+    - pwd
+    - echo "test-mac"
+  tags:
+    - gift-mac
+
 build-mac:
+  stage: build
   script:
     - pwd
     - echo "build-mac"
