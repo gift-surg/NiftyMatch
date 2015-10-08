@@ -11,7 +11,7 @@ before_script:
   - INSTALL_DIR="$SCRATCH_DIR/$INSTALL_DIR"
   - NiftyMatch_DIR="$INSTALL_DIR/$NiftyMatch_DIR"
   - NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
-  - cuSIFT_SOURCE_DIR="$SCRATCH_DIR/source/cuSIFT"
+  - cuSIFT_SOURCE_DIR="$SCRATCH_DIR/source/cuSIFT/src"
   - cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
 
 stages:
