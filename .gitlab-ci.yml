@@ -1,6 +1,8 @@
 jobs:
   script:
-    - dir
+    - pwd
+    - echo "SuCCeSS"
+    # - dir
     # - "################ NiftyMatch ################"
     # - cd ..
     # - rm -rf NiftyMatch-build NiftyMatch-install
@@ -37,6 +39,7 @@ jobs:
     # - cuda
     # - gift-adelie
     # - gift-mac
-    - tmp-tag-for-testing
+    # - tmp-tag-for-testing
+    - tmp-tag-for-testing-cmiclab-lin
   # except:
   # - tags
