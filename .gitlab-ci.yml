@@ -4,7 +4,7 @@ variables:
   NiftyMatch_DIR: "install/include/nm"
 
 before_script:
-  - INSTALL_DIR = "$(pwd)/$INSTALL_DIR"
+  - INSTALL_DIR="$(pwd)/$INSTALL_DIR"
   - pwd
   - echo $INSTALL_DIR
   - echo "before_script"
