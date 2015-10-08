@@ -11,7 +11,8 @@ before_script:
   - INSTALL_DIR="$SCRATCH_DIR/$INSTALL_DIR"
   - NiftyMatch_DIR="$INSTALL_DIR/$NiftyMatch_DIR"
   - NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
-  - cuSIFT_SOURCE_DIR="$SCRATCH_DIR/source/cuSIFT/src"
+  - cuSIFT_REPO_DIR="$SCRATCH_DIR/source/cuSIFT"
+  - cuSIFT_SOURCE_DIR="$cuSIFT_REPO_DIR/src"
   - cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
 
 stages:
@@ -35,7 +36,8 @@ deploy-linux:
   script:
     - cd "$NiftyMatch_BUILD_DIR"
     - make install
-    - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git "$cuSIFT_SOURCE_DIR" --branch dev
+    - rm -rf "$cuSIFT_REPO_DIR"
+    - git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/cuSIFT.git "$cuSIFT_REPO_DIR" --branch dev
     - rm -rf "$cuSIFT_BUILD_DIR"
     - mkdir -p "$cuSIFT_BUILD_DIR"
     - cd "$cuSIFT_BUILD_DIR"
