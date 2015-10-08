@@ -8,51 +8,22 @@ before_script:
   - export cuSIFT_SOURCE_DIR="$cuSIFT_REPO_DIR/src"
   - export cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
 
-stages:
-  - build
-  - deploy # faking deploy for now, i.e. only for testing
-  - test
-
 # Linux ##################
-build-linux:
-  stage: build
-  script: ./build-linux.sh
-  tags:
-    - gift-linux
-    - cuda
-
-deploy-linux:
-  stage: deploy
-  script: ./deploy-linux.sh
-  tags:
-    - gift-linux
-    - cuda
-
-test-linux:
-  stage: test
-  script: ./test-linux.sh
+gift-linux:
+  script:
+    - ./build-linux.sh
+    - ./deploy-linux.sh
+    - ./test-linux.sh
   tags:
     - gift-linux
     - cuda
 
 # Mac ##################
-build-mac:
-  stage: build
-  script: ./build-linux.sh
-  tags:
-    - gift-mac
-    - cuda
-
-deploy-mac:
-  stage: deploy
-  script: ./deploy-linux.sh
-  tags:
-    - gift-mac
-    - cuda
-
-test-mac:
-  stage: test
-  script: ./test-linux.sh
+gift-mac:
+  script:
+    - ./build-linux.sh
+    - ./deploy-linux.sh
+    - ./test-linux.sh
   tags:
     - gift-mac
     - cuda
