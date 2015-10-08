@@ -1,9 +1,10 @@
 variables:
-  NiftyMatch_INSTALL_DIR: "$(pwd)/../NiftyMatch-install"
+  NiftyMatch_INSTALL_DIR: "install"
+  NiftyMatch_DIR: $NiftyMatch_INSTALL_DIR/include/nm
 
 before_script:
   - pwd
-  - echo $NiftyMatch_INSTALL_DIR
+  - echo $NiftyMatch_DIR
   - echo "before_script"
 
 stages:
@@ -14,7 +15,7 @@ build-linux:
   stage: build
   script:
     - pwd
-    - echo $NiftyMatch_INSTALL_DIR
+    - echo $NiftyMatch_DIR
     - echo "build-linux"
   tags:
     - gift-mac
@@ -23,7 +24,7 @@ test-linux:
   stage: test
   script:
     - pwd
-    - echo $NiftyMatch_INSTALL_DIR
+    - echo $NiftyMatch_DIR
     - echo "test-linux"
   tags:
     - gift-mac
@@ -32,7 +33,7 @@ test-mac:
   stage: test
   script:
     - pwd
-    - echo $NiftyMatch_INSTALL_DIR
+    - echo $NiftyMatch_DIR
     - echo "test-mac"
   tags:
     - gift-mac
@@ -41,7 +42,7 @@ build-mac:
   stage: build
   script:
     - pwd
-    - echo $NiftyMatch_INSTALL_DIR
+    - echo $NiftyMatch_DIR
     - echo "build-mac"
     # - dir
     # - "################ NiftyMatch ################"
