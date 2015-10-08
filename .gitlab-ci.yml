@@ -1,5 +1,5 @@
 variables:
-  NiftyMatch_INSTALL_DIR="$(pwd)/../NiftyMatch-install"
+  NiftyMatch_INSTALL_DIR: "$(pwd)/../NiftyMatch-install"
 
 before_script:
   - pwd
