@@ -1,5 +1,5 @@
 before_script:
-  - export SCRATCH_DIR=$(readlink -f "../scratch-space") # get absolute path
+  - export SCRATCH_DIR="$(pwd)/../scratch-space"
   - export NiftyMatch_SOURCE_DIR="$(pwd)/src"
   - export NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
