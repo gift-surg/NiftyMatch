@@ -13,23 +13,46 @@ stages:
   - deploy # faking deploy for now, i.e. only for testing
   - test
 
+# Linux ##################
 build-linux:
   stage: build
-  script: ./build.sh
+  script: ./build-linux.sh
   tags:
     - gift-linux
     - cuda
 
 deploy-linux:
   stage: deploy
-  script: ./deploy.sh
+  script: ./deploy-linux.sh
   tags:
     - gift-linux
     - cuda
 
 test-linux:
   stage: test
-  script: ./test.sh
+  script: ./test-linux.sh
   tags:
     - gift-linux
+    - cuda
+
+# Mac ##################
+build-mac:
+  stage: build
+  script: ./build-linux.sh
+  tags:
+    - gift-mac
+    - cuda
+
+deploy-mac:
+  stage: deploy
+  script: ./deploy-linux.sh
+  tags:
+    - gift-mac
+    - cuda
+
+test-mac:
+  stage: test
+  script: ./test-linux.sh
+  tags:
+    - gift-mac
     - cuda
