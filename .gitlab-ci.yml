@@ -4,8 +4,8 @@ variables:
   NiftyMatch_DIR: "install/include/nm"
 
 before_script:
+  - NiftyMatch_SOURCE_DIR="$(pwd)/src"
   - INSTALL_DIR="$(pwd)/$INSTALL_DIR"
-  - pwd
   - echo $INSTALL_DIR
   - echo "before_script"
 
@@ -19,8 +19,9 @@ build-linux:
   script:
     - mkdir -p $BUILD_DIR
     - cd $BUILD_DIR
-    - pwd
-    - echo "build-linux"
+    - cmake -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$NiftyMatch_SOURCE_DIR"
+    # - make -j
+    # - make install
   tags:
     - gift-linux
 
