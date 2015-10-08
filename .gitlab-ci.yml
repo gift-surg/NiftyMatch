@@ -2,6 +2,7 @@ jobs:
   script:
     - pwd
     - echo "SuCCeSS"
+    - echo "after new key enabled"
     # - dir
     # - "################ NiftyMatch ################"
     # - cd ..
