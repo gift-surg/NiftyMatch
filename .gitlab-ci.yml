@@ -21,7 +21,7 @@ gift-linux:
 # Mac ##################
 gift-mac:
   script:
-    - ./build-linux.sh
+    - ./build-mac.sh
     - ./deploy-linux.sh
     - ./test-linux.sh
   tags:
