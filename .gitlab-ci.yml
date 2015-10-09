@@ -22,7 +22,7 @@ gift-linux:
 gift-mac:
   script:
     - ./build-mac.sh
-    - ./deploy-linux.sh
+    - ./deploy-mac.sh
     - ./test-linux.sh
   tags:
     - gift-mac
