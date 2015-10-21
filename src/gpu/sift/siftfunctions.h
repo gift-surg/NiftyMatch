@@ -33,6 +33,5 @@ void compute_orientations(PyramidData & pydata, const SiftParams & params, const
 void compute_descriptors(PyramidData & pydata, const SiftParams & params, const int octave, const int octave_width,
                          const int octave_height, SiftData &data, cudaStream_t stream=0);
 
-void collect_keypoints(float4 * key_points, PyramidData & pydata, SiftParams & params);
 
 #endif
