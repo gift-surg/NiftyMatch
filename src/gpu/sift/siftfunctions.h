@@ -13,8 +13,6 @@ void compute_sift_matches(SiftData * A, SiftData * B,
                           float * distance, float ambiguity = 0.8f,
                           cudaStream_t stream = 0);
 
-void compute_sift_octave(PyramidData & pydata, SiftParams & params, int octave);
-
 void compute_dog(PyramidData & pydata,
                  const int octave_width, const int octave_height,
                  cudaStream_t stream = 0);
