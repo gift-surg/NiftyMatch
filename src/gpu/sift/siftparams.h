@@ -8,13 +8,25 @@
 
 #define     MINIMUM_OCTAVE_SIZE 32
 
+//!
+//! \brief Keeps SIFT parametres
+//!
 class SiftParams
 {
 public:
+    //!
+    //! \brief Do nothing, leave all initialisation to client
+    //!
     SiftParams()
         :_width(0), _height(0)
     {}
 
+    //!
+    //! \brief Initialise all parametres based on \c width
+    //! and \c height
+    //! \param width
+    //! \param height
+    //!
     SiftParams(int width, int height)
         :_width(width), _height(height), _num_dog_levels(3),
          _sigma_n(0.5f), _peak_threshold(0), _edge_threshold(10.f)
@@ -38,18 +50,45 @@ public:
         for (int i = _level_min + 1; i <= _level_max; ++i) _sigmas.push_back(_sigma_d_0 * std::pow(_sigma_k, i));
     }
 
+    //!
+    //! \brief Image width
+    //!
     int                     _width;
+
+    //!
+    //! \brief Image height
+    //!
     int                     _height;
+
     int                     _num_octaves;
+
+    //!
+    //! \brief Number of difference of Gaussian levels
+    //!
     int                     _num_dog_levels;
+
+    //!
+    //! \brief When iterating, use: <tt>i <= _level_max - 2</tt>
+    //!
     int                     _level_max;
+
+    //!
+    //! \brief When iterating, start from: <tt>i = _level_min + 1</tt>
+    //!
     int                     _level_min;
     float                   _sigma_d_0;
     float                   _sigma_k;
     float                   _sigma_0;
     float                   _sigma_n;
+
+    //!
+    //! \brief Base image smoothing factor
+    //!
     float                   _base_smooth;
 
+    //!
+    //! \brief Smoothing factors for each level
+    //!
     std::vector<float>      _sigmas;
 
     float                   _peak_threshold;
