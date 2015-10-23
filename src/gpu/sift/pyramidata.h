@@ -18,7 +18,7 @@ public:
     //! \brief Default constructor leaving all initialisation to client
     //!
     PyramidData()
-        :_num_levels(0), _num_dogs(0), _num_kernels(0)
+        :_num_octaves(0), _num_dogs(0), _num_kernels(0)
     {}
 
     //!
@@ -112,7 +112,7 @@ public:
     //!
     //! \brief Number of scale-space levels
     //!
-    int                                 _num_levels;
+    int                                 _num_octaves;
 
     //!
     //! \brief Number of difference of Gaussians

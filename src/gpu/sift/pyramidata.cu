@@ -16,7 +16,7 @@ struct is_valid_kpt
 
 
 PyramidData::PyramidData(const SiftParams & params)
-    :_num_levels(0), _num_dogs(0), _num_kernels(0)
+    :_num_octaves(0), _num_dogs(0), _num_kernels(0)
 {
     initialize(params);
 }
@@ -25,11 +25,11 @@ void PyramidData::initialize(const SiftParams & params)
 {
     clear();
 
-    _num_levels = params._level_max - params._level_min + 1;
-    if (_num_levels > 20) RUNTIME_EXCEPTION("Maximum bumber of levels is 20.");
+    _num_octaves = params._level_max - params._level_min + 1;
+    if (_num_octaves > 20) RUNTIME_EXCEPTION("Maximum bumber of levels is 20.");
     const int num_pixels = params._width * params._height;
 
-    for (int i = 0; i < _num_levels; ++i) {
+    for (int i = 0; i < _num_octaves; ++i) {
         _octave[i] = thrust::device_vector<float>(num_pixels);
     }
     _num_dogs = params._level_max - params._level_min;
@@ -52,7 +52,7 @@ void PyramidData::initialize(const SiftParams & params)
 
 void PyramidData::clear()
 {
-    for (int i = 0; i < _num_levels; ++i) {
+    for (int i = 0; i < _num_octaves; ++i) {
         _octave[i].clear();
     }
     _grad.clear();
@@ -75,7 +75,7 @@ void PyramidData::clear()
     }
 
     _kernel_radii.clear();
-    _num_levels = _num_dogs = _num_kernels = 0;
+    _num_octaves = _num_dogs = _num_kernels = 0;
 }
 
 
