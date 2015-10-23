@@ -60,6 +60,9 @@ public:
     //!
     int                     _height;
 
+    //!
+    //! \brief Number of scale-space levels
+    //!
     int                     _num_octaves;
 
     //!
