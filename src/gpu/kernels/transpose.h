@@ -5,6 +5,14 @@
 #include <cuda_runtime.h>
 #include <cuda.h>
 
+//!
+//! \brief Transpose given \c idata
+//! \param odata transposed data is saved here
+//! \param idata
+//! \param width
+//! \param height
+//! \param stream
+//!
 template<typename TYPE>
 void transpose(TYPE * odata,
                const TYPE * idata,
