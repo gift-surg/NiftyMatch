@@ -3,7 +3,6 @@ SET(HEADERS
     bgra_2_gray.h
     transpose.h
     match.h
-    dog.h
     cudamath.h
     resample.h
     downsample.h
@@ -17,7 +16,6 @@ CUDA_ADD_LIBRARY(${NAME}
     bgra_2_gray.cu
     transpose.cu
     match.cu
-    dog.cu
     cudamath.cu
     resample.cu
     downsample.cu
