@@ -9,7 +9,7 @@ void find_keypoints(cudaTextureObject_t current,
                     const int width, const int height,
                     const float peak_thresh, const float edge_threshold,
                     const float xper, const float sigma_0,
-                    const int num_dogs, const int level,
+                    const int num_dogs, const int dog,
                     float4 * result,
                     cudaStream_t stream=0);
 
@@ -19,7 +19,7 @@ void find_keypoints(cudaTextureObject_t current, cudaTextureObject_t mask,
                     const int width, const int height,
                     const float peak_thresh, const float edge_threshold,
                     const float xper, const float sigma_0,
-                    const int num_dogs, const int level,
+                    const int num_dogs, const int dog,
                     float4 * result,
                     cudaStream_t stream=0);
 
