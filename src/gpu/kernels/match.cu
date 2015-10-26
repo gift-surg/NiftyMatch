@@ -119,17 +119,17 @@ __global__ void set_matches(TYPE * __restrict__ result, const float * __restrict
 template<typename TYPE>
 void compute_brute_force_distance(const TYPE* A, const int size_A,
                                   const TYPE* B, const int size_B,
-                                  const int vector_dim, TYPE* result,
+                                  const int sift_vector_size, TYPE* result,
                                   cudaStream_t stream)
 {
     checkCudaErrors(cudaFuncSetCacheConfig(brute_force_distance<float>,
                                            cudaFuncCachePreferL1));
 
     dim3 blocks(DivUp(size_B, CHUNK));
-    dim3 threads(vector_dim);
-    int smemBytes = CHUNK * vector_dim * sizeof(TYPE);
+    dim3 threads(sift_vector_size);
+    int smemBytes = CHUNK * sift_vector_size * sizeof(TYPE);
     brute_force_distance<TYPE> <<<blocks, threads, smemBytes, stream>>> (A, size_A,
-                                                                         B, size_B, vector_dim,
+                                                                         B, size_B, sift_vector_size,
                                                                          result);
     getLastCudaError("Brute force distance computation launch failed");
 }
