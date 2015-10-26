@@ -138,7 +138,7 @@ template void compute_brute_force_distance<float> (const float*, const int, cons
                                                    const int, float* result, cudaStream_t);
 
 template<typename TYPE>
-void get_sift_matches(TYPE *distance, const int rows, const int cols, const int buffer_width,
+void get_sift_matches(const TYPE * distance, const int rows, const int cols, const int buffer_width,
                       int *result, float ambiguity, cudaStream_t stream)
 {
     checkCudaErrors(cudaFuncSetCacheConfig(set_matches<TYPE>,
@@ -149,5 +149,5 @@ void get_sift_matches(TYPE *distance, const int rows, const int cols, const int 
     getLastCudaError("Set matches launch failed");
 }
 
-template void get_sift_matches<float>(float *, const int, const int, const int,
+template void get_sift_matches<float>(const float *, const int, const int, const int,
                                       int *, float, cudaStream_t);

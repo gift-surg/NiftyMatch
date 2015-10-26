@@ -12,7 +12,7 @@ void compute_brute_force_distance(const TYPE * A, const int size_A,
                                   cudaStream_t stream = 0);
 
 template<typename TYPE>
-void get_sift_matches(TYPE * distance,
+void get_sift_matches(const TYPE * distance,
                       const int rows, const int cols,
                       const int buffer_width,
                       int * result,
