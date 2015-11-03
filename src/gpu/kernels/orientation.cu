@@ -218,13 +218,13 @@ __global__ void kernel_orientations_naive(const float4* keypts, const float2* gr
 
 void detect_orientations(const float4* key_pts, const float2* grad, const int num_pts,
                          const int octave_width, const int octave_height,
-                         float gauss_fac, const float xper,
+                         float gauss_factor, const float xper,
                          float2* result, cudaStream_t stream)
 {
     dim3 blocks(22, 22);
     dim3 grid(num_pts);
     kernel_orientations_optim<<<grid, blocks, 0, stream>>>(key_pts, grad, num_pts,
                                                            octave_width, octave_height,
-                                                           gauss_fac, xper, result);
+                                                           gauss_factor, xper, result);
     getLastCudaError("Orientation histogram launch failed");
 }
