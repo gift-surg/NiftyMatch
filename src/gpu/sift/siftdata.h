@@ -12,7 +12,7 @@
 //! \brief Heuristically selected for fitting a homography,
 //! but can be increased for images with a richer set of
 //! features
-#define MAX_DESCRIPTORS     1024
+#define MAX_DESCRIPTORS     2048
 
 //!
 //! \brief Keeps keypoints, descriptors and matches
