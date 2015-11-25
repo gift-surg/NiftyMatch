@@ -326,17 +326,13 @@ __global__ void translation_kernel(const float* src_x, const float* src_y, const
 {
     const int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= iterations) return;
-
-    int rand_idx[2];
-    rand_idx[0] = rand_list[idx * 2];
-    rand_idx[1] = rand_list[idx * 2 + 1];
+    int rand_idx = rand_list[idx];
 
     float2 src, dst;
-    src.x = src_x[rand_idx[0]];
-    src.y = src_y[rand_idx[0]];
-
-    dst.x = dst_x[rand_idx[1]];
-    dst.y = dst_y[rand_idx[1]];
+    src.x = src_x[rand_idx];
+    src.y = src_y[rand_idx];
+    dst.x = dst_x[rand_idx];
+    dst.y = dst_y[rand_idx];
 
     float* H = &homographies[idx * 9];
     // Now we are ready to compute the homography
@@ -386,22 +382,30 @@ bool ransac_translation(float *src_x, float *src_y, float *dst_x, float *dst_y,
                         int iterations, float *homography, cudaStream_t stream)
 {
     // Compute a random list on CPU
-    thrust::host_vector<int> cpu_rand_list (iterations * 2);
-    std::random_device seeder;
-    std::mt19937 engine(seeder());
-    std::uniform_int_distribution<int> dist(0, src_size-1);
+    thrust::host_vector<int> cpu_rand_list (iterations);
     thrust::device_ptr<float> temp = thrust::device_pointer_cast(src_x);
     thrust::host_vector<float> src_x_data(temp, temp + src_size);
-    int v;
-    int c = 0;
-    do
-    {
-        v = dist(engine);
-        if (src_x_data[v]  >= 0) {
-            cpu_rand_list[c] = v;
-            ++c;
+    thrust::host_vector<int> src_x_indices_filtered;
+    for (int i = 0; i < src_x_data.size(); ++i) {
+        if (src_x_data[i] >= 0) {
+            src_x_indices_filtered.push_back(i);
         }
-    } while (c < (iterations * 2));
+    }
+    // Not enough points
+    if (src_x_indices_filtered.size() < 2) {
+        std::cout << src_x_indices_filtered.size() << std::endl; std::cout.flush();
+        return false;
+    }
+
+    std::random_device seeder;
+    std::mt19937 engine(seeder());
+    std::uniform_int_distribution<int> dist(0, src_x_indices_filtered.size()-1);
+
+    int v;
+    for (int c = 0; c < iterations; ++c) {
+        v = dist(engine);
+        cpu_rand_list[c] = src_x_indices_filtered[v];
+    }
 
     // Copy the random list to GPU
     thrust::device_vector<int> gpu_rand_list = cpu_rand_list;
@@ -420,11 +424,8 @@ bool ransac_translation(float *src_x, float *src_y, float *dst_x, float *dst_y,
                                                        homographies, inliers_idx,
                                                        rand_list, iterations, inlier_threshold);
     getLastCudaError("RANSAC launch failed");
-
     thrust::device_vector<int>::iterator iter = thrust::max_element(gpu_inliers_idx.begin(),
                                                                     gpu_inliers_idx.end());
-
-
     unsigned int position = iter - gpu_inliers_idx.begin();
     float * h = thrust::raw_pointer_cast(&gpu_homographies[position*9]);
     cudaMemcpy(homography, h, 9 * sizeof(float), cudaMemcpyDeviceToDevice);
@@ -479,19 +480,6 @@ bool ransac_homography(float *src_x, float *src_y, float *dst_x, float *dst_y,
     unsigned int position = iter - gpu_inliers_idx.begin();
     float * h = thrust::raw_pointer_cast(&gpu_homographies[position*9]);
     cudaMemcpy(homography, h, 9 * sizeof(float), cudaMemcpyDeviceToDevice);
-
-
-    /*std::cout << position << " " << gpu_inliers_idx[position] << std::endl;
-
-    position = position * 9;
-
-    std::cout << gpu_homographies[position + 0] << " " << gpu_homographies[position + 1] << " " << gpu_homographies[position + 2] << std::endl;
-    std::cout << gpu_homographies[position + 3] << " " << gpu_homographies[position + 4] << " " << gpu_homographies[position + 5] << std::endl;
-    std::cout << gpu_homographies[position + 6] << " " << gpu_homographies[position + 7] << " " << gpu_homographies[position + 8] << std::endl;
-    std::cout.flush();*/
-
-    //if (*iter < 100) return false;
-
     return true;
 
 
