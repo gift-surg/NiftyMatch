@@ -37,13 +37,20 @@ __global__ void undistort(const float * x, const float * y,
                 cx = camera_matrix[2],
                 cy = camera_matrix[3];
     if (0 <= pos and pos < cols * rows) {
-        float r = powf(x[pos], 2) + powf(y[pos], 2);
+        float r2 = powf(x[pos] - cols / 2.0f, 2) + powf(y[pos] - rows / 2.0f, 2);
         // common coefficient for multiplication
-        float tmp = 1 + k1 * powf(r, 2) + k2 * powf(r, 4) + k3 * powf(r, 6);
+        float tmp = 1 + k1 * r2 + k2 * powf(r2, 2) + k3 * powf(r2, 3);
         x_u[pos] = (x[pos] - cx) / fx;
+//        x_u[pos] = x[pos];
         x_u[pos] *= tmp;
+        x_u[pos] *= fx;
+        x_u[pos] += cx;
+
         y_u[pos] = (y[pos] - cy) / fy;
+//        y_u[pos] = y[pos];
         y_u[pos] *= tmp;
+        y_u[pos] *= fy;
+        y_u[pos] += cy;
     }
 }
 
