@@ -97,6 +97,20 @@ __global__ void resample_2D(uchar4* __restrict__ result, cudaTextureObject_t tex
     }
 }
 
+__global__ void resample_2D(float * __restrict__ result, cudaTextureObject_t text,
+                            const int width, const int height,
+                            const float * __restrict__ x, const float * __restrict__ y)
+{
+    const int _x = __mul24(blockDim.x, blockIdx.x) + threadIdx.x;
+    const int _y = __mul24(blockDim.y, blockIdx.y) + threadIdx.y;
+
+    if (_x < width && _y < height) {
+        const int i = _y * width + _x;
+        float res = tex2D<float>(text, x[i] + 0.5f, y[i] + 0.5f);
+        result[i] = res * 255.9999f;
+    }
+}
+
 // Apply the inverse of the supplied perspective transform to generate new coordinates
 template<typename TYPE>
 __global__ void apply_perspective_inverse(TYPE * __restrict__ x_pos, TYPE * __restrict__ y_pos,
@@ -216,4 +230,19 @@ void transform_blend(uchar4 * canvas, const int cw, const int ch,
                                                      nw, nh, mat3x3, tx, ty, frame_mask,
                                                      canvas_wts, frame_wts);
     getLastCudaError("Blend launch failed");
+}
+
+void resample_undistort(cudaTextureObject_t tex,
+                        const float * x, const float * y,
+                        const size_t cols, const size_t rows,
+                        float * undistorted,
+                        cudaStream_t stream)
+{
+    dim3 blocks(16, 16);
+    dim3 grid(DivUp(cols, blocks.x), DivUp(rows, blocks.y));
+    resample_2D<<<grid, blocks, 0, stream>>>(undistorted,
+                                             tex,
+                                             cols, rows,
+                                             x, y);
+    getLastCudaError("Resample 2D image kernel launch failed for undistort");
 }
