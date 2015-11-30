@@ -14,16 +14,41 @@
 //! OpenCV undistort
 //! \param camera_matrix fx, fy, cx, cy as in
 //! OpenCV undistort
-//! \param x_u distortion-corrected x
+//! \param u distortion-corrected x
 //! coordinates (no boundary check performed!)
-//! \param y_u distortion-corrected y
+//! \param v distortion-corrected y
 //! coordinates (no boundary check performed!)
+//!
+
+//!
+//! \brief Compute distortion correction map
+//! from undistorted image coordinates \c u and
+//! \c v to original image coordinates \c x and
+//! \c y, using same process as OpenCV undistort)
+//! \param x original x coordinates (used as
+//! initial values for \c u)
+//! \param y original y coordinates (used as
+//! initial values for \c v)
+//! \param cols not used for border checks, so
+//! resulting \c u values might be out of
+//! bounds!
+//! \param rows not used for border checks, so
+//! resulting \c v values might be out of
+//! bounds!
+//! \param camera_matrix fx, fy, cx, and cy as
+//! in OpenCV undistort
+//! \param distortion_coeffs k1, k2, and k3 as
+//! in OpenCV undistort
+//! \param u for each new position \c u_i, use
+//! \c u[u_i] from original image
+//! \param v for each new potision \c v_i, use
+//! \c v[v_i] from original image
 //!
 __global__ void undistort(const float * x, const float * y,
                           const size_t cols, const size_t rows,
                           const float * distortion_coeffs,
                           const float * camera_matrix,
-                          float * x_u, float * y_u)
+                          float * u, float * v)
 {
     const size_t i = __mul24(blockDim.x, blockIdx.x) + threadIdx.x;
     const size_t j = __mul24(blockDim.y, blockIdx.y) + threadIdx.y;
@@ -36,21 +61,29 @@ __global__ void undistort(const float * x, const float * y,
                 fy = camera_matrix[1],
                 cx = camera_matrix[2],
                 cy = camera_matrix[3];
-    if (0 <= pos and pos < cols * rows) {
-        float r2 = powf(x[pos] - cols / 2.0f, 2) + powf(y[pos] - rows / 2.0f, 2);
-        // common coefficient for multiplication
-        float tmp = 1 + k1 * r2 + k2 * powf(r2, 2) + k3 * powf(r2, 3);
-        x_u[pos] = (x[pos] - cx) / fx;
-//        x_u[pos] = x[pos];
-        x_u[pos] *= tmp;
-        x_u[pos] *= fx;
-        x_u[pos] += cx;
 
-        y_u[pos] = (y[pos] - cy) / fy;
-//        y_u[pos] = y[pos];
-        y_u[pos] *= tmp;
-        y_u[pos] *= fy;
-        y_u[pos] += cy;
+    if (0 <= pos and pos < cols * rows) {
+
+        u[pos] = x[pos];
+        u[pos] -= cx;
+        u[pos] /= fx;
+
+        v[pos] = y[pos];
+        v[pos] -= cy;
+        v[pos] /= fy;
+
+        // radial distortion correction, at this point:
+        // u = x', and v = y'
+        float r2 = powf(u[pos], 2) + powf(v[pos], 2);
+        float kr_poly = 1 + k1 * r2 + k2 * powf(r2,2) + k3 * powf(r2,3);
+
+        u[pos] /= kr_poly;
+        u[pos] *= fx;
+        u[pos] += cx;
+
+        v[pos] /= kr_poly;
+        v[pos] *= fy;
+        v[pos] += cy;
     }
 }
 
@@ -58,7 +91,7 @@ void cuda_undistort(const float * x, const float * y,
                     const size_t cols, const size_t rows,
                     const float * camera_matrix,
                     const float * distortion_coeffs,
-                    float * x_u, float * y_u,
+                    float * u, float * v,
                     cudaStream_t stream)
 {
     dim3 blocks(16, 16);
@@ -67,7 +100,7 @@ void cuda_undistort(const float * x, const float * y,
                                            cols, rows,
                                            distortion_coeffs,
                                            camera_matrix,
-                                           x_u, y_u);
+                                           u, v);
     getLastCudaError("Undistort kernel launch failed");
     // TODO add resample!
 }
