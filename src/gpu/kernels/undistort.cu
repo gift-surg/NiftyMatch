@@ -56,7 +56,7 @@ __global__ void undistort(const float * x, const float * y,
 
     const float k1 = distortion_coeffs[0],
                 k2 = distortion_coeffs[1],
-                k3 = distortion_coeffs[3];
+                k3 = distortion_coeffs[2];
     const float fx = camera_matrix[0],
                 fy = camera_matrix[1],
                 cx = camera_matrix[2],
@@ -77,11 +77,11 @@ __global__ void undistort(const float * x, const float * y,
         float r2 = powf(u[pos], 2) + powf(v[pos], 2);
         float kr_poly = 1 + k1 * r2 + k2 * powf(r2,2) + k3 * powf(r2,3);
 
-        u[pos] /= kr_poly;
+        u[pos] *= kr_poly;
         u[pos] *= fx;
         u[pos] += cx;
 
-        v[pos] /= kr_poly;
+        v[pos] *= kr_poly;
         v[pos] *= fy;
         v[pos] += cy;
     }
