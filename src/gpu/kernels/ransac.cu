@@ -58,8 +58,8 @@ void align_points(const float* src_x, const float* src_y, const float* dst_x, co
 
 }
 
-__device__ int eval_homography(const float* src_x, const float* src_y, const float* dst_x, const float* dst_y,
-                               const int num_pts, const float H[9], const float inlier_threshold)
+__device__ int eval_transformation(const float* src_x, const float* src_y, const float* dst_x, const float* dst_y,
+                                   const int num_pts, const float H[9], const float inlier_threshold)
 {
     int inliers = 0;
 
@@ -319,6 +319,149 @@ __device__ void compute_translation(const float2 src, const float2 dst, float re
     ret_H[5] = dst.y - src.y;
 }
 
+__device__ void compute_similarity_transform(const float2 src[2], const float2 dst[2], float ret_H[9])
+{
+    float2 src_mean, dst_mean;
+    float src_var = 0.0f;
+    float dst_var = 0.0f;
+
+    src_mean.x = (src[0].x + src[1].x) * 0.50f;
+    src_mean.y = (src[0].y + src[1].y) * 0.50f;
+    dst_mean.x = (dst[0].x + dst[1].x) * 0.50f;
+    dst_mean.y = (dst[0].y + dst[1].y) * 0.50f;
+
+//#pragma unroll
+    for (int i = 0; i < 2; ++i) {
+        src_var += SQ(src[i].x - src_mean.x) + SQ(src[i].y - src_mean.y);
+        dst_var += SQ(dst[i].x - dst_mean.x) + SQ(dst[i].y - dst_mean.y);
+    }
+    src_var *= 0.5;
+    dst_var *= 0.5;
+
+    const float sqrt_2 = sqrt(2.0f);
+    float src_scale = sqrt_2 / sqrt(src_var);
+    float dst_scale = sqrt_2 / sqrt(dst_var);
+
+    GPU_Matrix X, V;
+    GPU_Vector S;
+    X.rows = 4;
+    X.cols = 5;
+
+    V.rows = 5;
+    V.cols = 5;
+
+    S.size = 4;
+
+    for(int i=0; i < 2; i++) {
+        /*
+        float srcx = src[i].x;
+        float srcy = src[i].y;
+
+        float dstx = dst[i].x;
+        float dsty = dst[i].y;*/
+
+        float srcx = (src[i].x - src_mean.x)*src_scale;
+        float srcy = (src[i].y - src_mean.y)*src_scale;
+
+        float dstx = (dst[i].x - dst_mean.x)*dst_scale;
+        float dsty = (dst[i].y - dst_mean.y)*dst_scale;
+
+        int row = i * 2;
+        matrix_set(&X, row, 0, srcx);
+        matrix_set(&X, row, 1, 1);
+        matrix_set(&X, row, 2, -srcy);
+        matrix_set(&X, row, 3, 0);
+        matrix_set(&X, row, 4, dstx);
+
+        row = row + 1;
+        matrix_set(&X, row, 0, srcy);
+        matrix_set(&X, row, 1, 0);
+        matrix_set(&X, row, 2, srcx);
+        matrix_set(&X, row, 3, 1);
+        matrix_set(&X, row, 4, dsty);
+    }
+
+    bool ret = linalg_SV_decomp_jacobi(&X, &V, &S);
+
+    float divisor = V.data[24];
+    float a_0 = -V.data[4]/divisor;
+    float a_1 = -V.data[9]/divisor;
+    float b_0 = -V.data[14]/divisor;
+    float b_1 = -V.data[19]/divisor;
+
+    /*
+    ret_H[0] =  a_0;
+    ret_H[1] = -b_0;
+    ret_H[2] =  a_1;
+    ret_H[3] =  b_0;
+    ret_H[4] =  a_0;
+    ret_H[5] =  b_1;
+    ret_H[6] =  0;
+    ret_H[7] =  0;
+    ret_H[8] =  1;*/
+
+    float H[9];
+    H[0] =  a_0;
+    H[1] = -b_0;
+    H[2] =  a_1;
+    H[3] =  b_0;
+    H[4] =  a_0;
+    H[5] =  b_1;
+    H[6] =  0;
+    H[7] =  0;
+    H[8] =  1;
+
+    // Undo the transformation using inv(dst_transform) * H * src_transform
+    // Matrix operation expanded out using wxMaxima
+    float s1 = src_scale;
+    float s2 = dst_scale;
+    float tx1 = src_mean.x;
+    float ty1 = src_mean.y;
+    float tx2 = dst_mean.x;
+    float ty2 = dst_mean.y;
+
+    ret_H[0] = s1*tx2*H[6] + s1*H[0]/s2;
+    ret_H[1] = s1*tx2*H[7] + s1*H[1]/s2;
+    ret_H[2] = tx2*(H[8] - s1*ty1*H[7] - s1*tx1*H[6]) + (H[2] - s1*ty1*H[1] - s1*tx1*H[0])/s2;
+
+    ret_H[3] = s1*ty2*H[6] + s1*H[3]/s2;
+    ret_H[4] = s1*ty2*H[7] + s1*H[4]/s2;
+    ret_H[5] = ty2*(H[8] - s1*ty1*H[7] - s1*tx1*H[6]) + (H[5] - s1*ty1*H[4] - s1*tx1*H[3])/s2;
+
+    ret_H[6] = s1*H[6];
+    ret_H[7] = s1*H[7];
+    ret_H[8] = H[8] - s1*ty1*H[7] - s1*tx1*H[6];
+}
+
+
+__global__ void similarity_transformation_kernel(const float* src_x, const float* src_y, const float* dst_x, const float* dst_y,
+                                                 const int src_size, float* homographies, int* inliers_idx,
+                                                 const int* rand_list, const int iterations, const float inlier_threshold)
+{
+    const int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx >= iterations) return;
+    int rand_idx[2];
+    rand_idx[0] = rand_list[idx * 2];
+    rand_idx[1] = rand_list[idx * 2 + 1];
+    // Check for duplicates
+    if(rand_idx[0] == rand_idx[1]) return;
+
+    float2 src[2], dst[2];
+//#pragma unroll
+    for(int i = 0; i < 2; i++) {
+        src[i].x = src_x[rand_idx[i]];
+        src[i].y = src_y[rand_idx[i]];
+        dst[i].x = dst_x[rand_idx[i]];
+        dst[i].y = dst_y[rand_idx[i]];
+    }
+
+    float* H = &homographies[idx * 9];
+    // Now we are ready to compute the transformation
+    compute_similarity_transform(src, dst, H);
+    // Now evaluate the estimated homography on all the points
+    inliers_idx[idx] = eval_transformation(src_x, src_y, dst_x, dst_y, src_size, H, inlier_threshold);
+}
+
 
 __global__ void translation_kernel(const float* src_x, const float* src_y, const float* dst_x, const float* dst_y,
                                    const int src_size, float* homographies, int* inliers_idx,
@@ -338,7 +481,7 @@ __global__ void translation_kernel(const float* src_x, const float* src_y, const
     // Now we are ready to compute the homography
     compute_translation(src, dst, H);
     // Now evaluate the estimated homography on all the points
-    inliers_idx[idx] = eval_homography(src_x, src_y, dst_x, dst_y, src_size, H, inlier_threshold);
+    inliers_idx[idx] = eval_transformation(src_x, src_y, dst_x, dst_y, src_size, H, inlier_threshold);
 }
 
 __global__ void homography_kernel(const float* src_x, const float* src_y, const float* dst_x, const float* dst_y,
@@ -372,9 +515,9 @@ __global__ void homography_kernel(const float* src_x, const float* src_y, const 
 
     float* H = &homographies[idx * 9];
     // Now we are ready to compute the homography
-    compute_homography(src, dst, H);
+    compute_homography_2(src, dst, H);
     // Now evaluate the estimated homography on all the points
-    inliers_idx[idx] = eval_homography(src_x, src_y, dst_x, dst_y, src_size, H, inlier_threshold);
+    inliers_idx[idx] = eval_transformation(src_x, src_y, dst_x, dst_y, src_size, H, inlier_threshold);
 }
 
 bool ransac_translation(float *src_x, float *src_y, float *dst_x, float *dst_y,
@@ -432,6 +575,64 @@ bool ransac_translation(float *src_x, float *src_y, float *dst_x, float *dst_y,
     return true;
 }
 
+// Estimate a similarity transformation
+bool ransac_similarity(float *src_x, float *src_y, float *dst_x, float *dst_y,
+                       const int src_size, const int dst_size, float inlier_threshold,
+                       int iterations, float *homography, cudaStream_t stream)
+{
+    // Compute a random list on CPU
+    thrust::host_vector<int> cpu_rand_list (iterations * 2);
+    thrust::device_ptr<float> temp = thrust::device_pointer_cast(src_x);
+    thrust::host_vector<float> src_x_data(temp, temp + src_size);
+    thrust::host_vector<int> src_x_indices_filtered;
+    for (int i = 0; i < src_x_data.size(); ++i) {
+        if (src_x_data[i] >= 0) {
+            src_x_indices_filtered.push_back(i);
+        }
+    }
+
+    // Not enough points
+    if (src_x_indices_filtered.size() < 2) {
+        std::cout << src_x_indices_filtered.size() << std::endl; std::cout.flush();
+        return false;
+    }
+
+    std::random_device seeder;
+    std::mt19937 engine(seeder());
+    std::uniform_int_distribution<int> dist(0, src_x_indices_filtered.size()-1);
+
+    int v;
+    for (int c = 0; c < iterations * 2; ++c) {
+        v = dist(engine);
+        cpu_rand_list[c] = src_x_indices_filtered[v];
+    }
+
+    // Copy the random list to GPU
+    thrust::device_vector<int> gpu_rand_list = cpu_rand_list;
+
+    int * rand_list = thrust::raw_pointer_cast(&gpu_rand_list[0]);
+    // Allocate space for the homographies
+    thrust::device_vector<float> gpu_homographies(iterations * 9, 0);
+    float * homographies = thrust::raw_pointer_cast(&gpu_homographies[0]);
+
+    // Allocate space for the inliers count
+    thrust::device_vector<int> gpu_inliers_idx(iterations, 0);
+    int * inliers_idx = thrust::raw_pointer_cast(&gpu_inliers_idx[0]);
+    const int threads = 256;
+    const int blocks = DivUp(iterations, threads);
+    similarity_transformation_kernel<<<blocks, threads, 0, stream>>>(src_x, src_y, dst_x, dst_y, src_size,
+                                                                     homographies, inliers_idx,
+                                                                     rand_list, iterations, inlier_threshold);
+    getLastCudaError("RANSAC launch failed");
+
+    thrust::device_vector<int>::iterator iter = thrust::max_element(gpu_inliers_idx.begin(),
+                                                                    gpu_inliers_idx.end());
+    unsigned int position = iter - gpu_inliers_idx.begin();
+    float * h = thrust::raw_pointer_cast(&gpu_homographies[position*9]);
+    cudaMemcpy(homography, h, 9 * sizeof(float), cudaMemcpyDeviceToDevice);
+    return true;
+}
+
 
 bool ransac_homography(float *src_x, float *src_y, float *dst_x, float *dst_y,
                        const int src_size, const int dst_size, float inlier_threshold,
@@ -439,21 +640,30 @@ bool ransac_homography(float *src_x, float *src_y, float *dst_x, float *dst_y,
 {
     // Compute a random list on CPU
     thrust::host_vector<int> cpu_rand_list (iterations * 4);
-    std::random_device seeder;
-    std::mt19937 engine(seeder());
-    std::uniform_int_distribution<int> dist(0, src_size-1);
     thrust::device_ptr<float> temp = thrust::device_pointer_cast(src_x);
     thrust::host_vector<float> src_x_data(temp, temp + src_size);
-    int v;
-    int c = 0;
-    do
-    {
-        v = dist(engine);
-        if (src_x_data[v]  >= 0) {
-            cpu_rand_list[c] = v;
-            ++c;
+    thrust::host_vector<int> src_x_indices_filtered;
+    for (int i = 0; i < src_x_data.size(); ++i) {
+        if (src_x_data[i] >= 0) {
+            src_x_indices_filtered.push_back(i);
         }
-    } while (c < (iterations * 4));
+    }
+
+    // Not enough points
+    if (src_x_indices_filtered.size() < 4) {
+        std::cout << src_x_indices_filtered.size() << std::endl; std::cout.flush();
+        return false;
+    }
+
+    std::random_device seeder;
+    std::mt19937 engine(seeder());
+    std::uniform_int_distribution<int> dist(0, src_x_indices_filtered.size()-1);
+
+    int v;
+    for (int c = 0; c < iterations * 4; ++c) {
+        v = dist(engine);
+        cpu_rand_list[c] = src_x_indices_filtered[v];
+    }
 
     // Copy the random list to GPU
     thrust::device_vector<int> gpu_rand_list = cpu_rand_list;
@@ -481,6 +691,4 @@ bool ransac_homography(float *src_x, float *src_y, float *dst_x, float *dst_y,
     float * h = thrust::raw_pointer_cast(&gpu_homographies[position*9]);
     cudaMemcpy(homography, h, 9 * sizeof(float), cudaMemcpyDeviceToDevice);
     return true;
-
-
 }

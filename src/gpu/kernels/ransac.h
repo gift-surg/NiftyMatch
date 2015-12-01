@@ -17,4 +17,8 @@ bool ransac_translation(float* src_x, float* src_y, float* dst_x, float* dst_y,
                         const int src_size, const int dst_size, float inlier_threshold,
                         int iterations, float *homography, cudaStream_t stream=0);
 
+bool ransac_similarity(float* src_x, float* src_y, float* dst_x, float* dst_y,
+                       const int src_size, const int dst_size, float inlier_threshold,
+                       int iterations, float *homography, cudaStream_t stream=0);
+
 #endif
