@@ -19,5 +19,23 @@ void transform_blend(uchar4 * canvas, const int cw, const int ch,
                      const int tx, const int ty, cudaTextureObject_t frame_mask,
                      float * canvas_wts, cudaTextureObject_t frame_wts, cudaStream_t stream=0);
 
+//!
+//! \brief Resample from \c tex to obtain
+//! \c undistorted image according to new
+//! coordinates \c x and \c y
+//! \param tex
+//! \param x
+//! \param y
+//! \param cols
+//! \param rows
+//! \param undistorted
+//! \param stream
+//!
+void resample_undistort(cudaTextureObject_t tex,
+                        const float * x, const float * y,
+                        const size_t cols, const size_t rows,
+                        float * undistorted,
+                        cudaStream_t stream = 0);
+
 
 #endif
