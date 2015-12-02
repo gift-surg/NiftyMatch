@@ -2,8 +2,8 @@
 cd "$cuSIFT_BUILD_DIR"
 make test
 ctestlog=Testing/Temporary/LastTest.log
-cat $ctestlog
-cat $ctestlog | grep -i failed
+cat $ctestlog | grep -i fail -B 25 -A 3
+cat $ctestlog | grep -i fail
 # last exit status 0 means, grep found failures!
 if [ $? == 0 ]; then
     exit 1;
