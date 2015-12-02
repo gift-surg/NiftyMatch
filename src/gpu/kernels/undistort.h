@@ -32,5 +32,5 @@ void cuda_undistort(const float * x, const float * y,
                     const size_t cols, const size_t rows,
                     const float * camera_matrix,
                     const float * distortion_coeffs,
-                    float * u, float * u,
+                    float * u, float * v,
                     cudaStream_t stream = 0);
