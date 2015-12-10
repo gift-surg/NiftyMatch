@@ -7,9 +7,9 @@ before_script:
   - export NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
   - export NiftyMatch_DIR="$INSTALL_DIR/include/nm"
-  - export cuSIFT_REPO_DIR="$SCRATCH_DIR/source/cuSIFT"
-  - export cuSIFT_SOURCE_DIR="$cuSIFT_REPO_DIR/src"
-  - export cuSIFT_BUILD_DIR="$SCRATCH_DIR/build/cuSIFT"
+  - export Test_REPO_DIR="$SCRATCH_DIR/source/NiftyMatch-Test"
+  - export Test_SOURCE_DIR="$Test_REPO_DIR/src"
+  - export Test_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch-Test"
 
 # Linux ##################
 gift-linux:
