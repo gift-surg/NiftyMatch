@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "$cuSIFT_BUILD_DIR"
+cd "$Test_BUILD_DIR"
 make test
 ctestlog=Testing/Temporary/LastTest.log
 cat $ctestlog | grep -i fail -B 25 -A 3
