@@ -1,0 +1,32 @@
+variables:
+  CI_SCRIPTS_DIR: "./ci"
+
+before_script:
+  - export SCRATCH_DIR="$(pwd)/../scratch-space"
+  - export NiftyMatch_SOURCE_DIR="$(pwd)/src"
+  - export NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
+  - export INSTALL_DIR="$SCRATCH_DIR/install"
+  - export NiftyMatch_DIR="$INSTALL_DIR/include/nm"
+  - export Test_REPO_DIR="$SCRATCH_DIR/source/NiftyMatch-Test"
+  - export Test_SOURCE_DIR="$Test_REPO_DIR/src"
+  - export Test_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch-Test"
+
+# Linux ##################
+gift-linux:
+  script:
+    - "$CI_SCRIPTS_DIR/build-linux.sh"
+    - "$CI_SCRIPTS_DIR/deploy-linux.sh"
+    - "$CI_SCRIPTS_DIR/test-linux.sh"
+  tags:
+    - gift-linux
+    - cuda
+
+# Mac ##################
+gift-mac:
+  script:
+    - "$CI_SCRIPTS_DIR/build-mac.sh"
+    - "$CI_SCRIPTS_DIR/deploy-mac.sh"
+    - "$CI_SCRIPTS_DIR/test-linux.sh"
+  tags:
+    - gift-mac
+    - cuda

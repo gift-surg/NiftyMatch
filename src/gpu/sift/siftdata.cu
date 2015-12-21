@@ -18,6 +18,7 @@ void SiftData::copy_from(const SiftData & in)
 
     _match_indexes = in._match_indexes;
     _match_indexes_ptr = thrust::raw_pointer_cast(&_match_indexes[0]);
+    _capacity = in._capacity;
 
     _num_items = in._num_items;
 }

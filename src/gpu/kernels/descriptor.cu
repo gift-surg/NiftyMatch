@@ -31,7 +31,7 @@ inline __device__ float normalize_histogram(float *data)
 
 __global__ void kernel_descriptor_optim(const float4 * keypts, const float2 * orients, const float2 * grad,
                                         const int num_pts, const int octave_width, const int octave_height,
-                                        const int num_levels, const float xper, float *desc,
+                                        const int num_dogs, const float xper, float *desc,
                                         float *xp, float *yp)
 {
     const int pt_idx = blockIdx.x;
@@ -46,7 +46,7 @@ __global__ void kernel_descriptor_optim(const float4 * keypts, const float2 * or
     int yi = (int)(y + 0.5);
     int si = keypts[pt_idx].w;
 
-    if (xi < 0 || xi >= octave_width || yi < 0 || yi >= octave_height || si < 0 || si >= num_levels)
+    if (xi < 0 || xi >= octave_width || yi < 0 || yi >= octave_height || si < 0 || si >= num_dogs)
         return;
 
     const float wsigma = NBP / 2;
@@ -241,14 +241,14 @@ __global__ void kernel_descriptor_naive(const float4 * kpts, const float2 * orie
 }
 
 void compute_sift_descriptors(const float4* key_pts, const float2* orients, const float2* grad, const int num_pts,
-                              const int octave_width, const int octave_height, const int num_levels,
+                              const int octave_width, const int octave_height, const int num_dogs,
                               const float xper, float * desc, float* x, float* y, cudaStream_t stream)
 {
     {
         dim3 blocks(16, 16);
         dim3 grid(num_pts);
         kernel_descriptor_optim<<<grid, blocks, 0, stream>>>(key_pts, orients, grad, num_pts,
-                                                             octave_width, octave_height, num_levels, xper,
+                                                             octave_width, octave_height, num_dogs, xper,
                                                              desc, x, y);
         getLastCudaError("SIFT descriptor detection launch failed");
     }

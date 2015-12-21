@@ -5,8 +5,18 @@
 #include <cuda_runtime.h>
 #include <cuda.h>
 
-template <typename TYPE>
-void transpose(TYPE *odata, const TYPE *idata, int width, int height,
-               cudaStream_t stream=0);
+//!
+//! \brief Transpose given \c idata
+//! \param odata transposed data is saved here
+//! \param idata
+//! \param width
+//! \param height
+//! \param stream
+//!
+template<typename TYPE>
+void transpose(TYPE * odata,
+               const TYPE * idata,
+               int width, int height,
+               cudaStream_t stream = 0);
 
 #endif

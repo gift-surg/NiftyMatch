@@ -3,7 +3,6 @@ SET(HEADERS
     bgra_2_gray.h
     transpose.h
     match.h
-    dog.h
     cudamath.h
     resample.h
     downsample.h
@@ -11,13 +10,14 @@ SET(HEADERS
     ransac.h
     keypoint.h
     orientation.h
-    descriptor.h)
+    descriptor.h
+    undistort.h
+    cast.h)
 CUDA_ADD_LIBRARY(${NAME}
     ${HEADERS}
     bgra_2_gray.cu
     transpose.cu
     match.cu
-    dog.cu
     cudamath.cu
     resample.cu
     downsample.cu
@@ -25,6 +25,8 @@ CUDA_ADD_LIBRARY(${NAME}
     ransac.cu
     keypoint.cu
     orientation.cu
-    descriptor.cu)
+    descriptor.cu
+    undistort.cu
+    cast.cu)
 INSTALL_INCLUDES(${HEADERS})
 INSTALL_BINARIES(${NAME})
