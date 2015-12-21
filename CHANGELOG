@@ -1,0 +1,16 @@
+# December 2015
+
+Use `git checkout v1512`.
+
+* In general:
+   * Added support for SIFT keypoint description and matching
+
+* In particular:
+  * Added kernels for:
+     * SIFT keypoint computations
+     * keypoint matching
+     * image processing: sampling, convolution, grayscaling, distortion correction
+  * Added datatypes for SIFT computations
+  * Added utils for: CUDA textures, timer
+
+* For details, build and check the documentation.
