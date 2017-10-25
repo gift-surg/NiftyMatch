@@ -20,6 +20,8 @@ gift-linux:
   tags:
     - gift-linux
     - cuda
+  except:
+    - 9-host-project-on-github
 
 # Mac ##################
 gift-mac:
@@ -30,3 +32,5 @@ gift-mac:
   tags:
     - gift-mac
     - cuda
+  except:
+    - 9-host-project-on-github
